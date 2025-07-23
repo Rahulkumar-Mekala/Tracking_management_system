@@ -1,0 +1,2 @@
+CREATE TYPE "public"."route_status" AS ENUM('on-time', 'delayed', 'cancelled', 'completed');--> statement-breakpoint
+ALTER TABLE "routetable" ADD COLUMN "status" "route_status" DEFAULT 'on-time' NOT NULL;

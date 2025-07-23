@@ -1,0 +1,1 @@
+ALTER TABLE "routetable" ADD COLUMN "stops" jsonb;

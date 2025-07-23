@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1752992741610,
+      "tag": "0000_long_dracula",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1752995565531,
+      "tag": "0001_awesome_nick_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752998578205,
+      "tag": "0002_heavy_yellowjacket",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1753072534490,
+      "tag": "0003_common_colossus",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1753232409328,
+      "tag": "0004_grey_imperial_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1753234110766,
+      "tag": "0005_hard_lady_bullseye",
+      "breakpoints": true
+    }
+  ]
+}
