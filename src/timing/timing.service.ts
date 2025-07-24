@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { and, eq, or } from 'drizzle-orm';
+import { and, eq, or, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { db } from 'src/db/db.connection';
 import { Bus, Depot, Location, Route, Timing } from 'src/db/schema';
@@ -56,13 +56,35 @@ async sourceanddestination(source_location_id: string, destination_location_id: 
  }
 
  
-  async Timming(){
-     const result = await db.select(
-      {
-        Sorce:Timing.source_location_id,
-        Destination:Timing.destination_location_id
+ async getTimingWithPagination(page: number, limit: number) {
+  
+  const currentPage = Math.max(1, page);
+  const pageSize = Math.max(1, limit);
+  const offset = (currentPage - 1) * pageSize;
 
-     }).from(Timing);
-      return result
-  }
+ 
+  const totalRecordsResult = await db.select({ count: sql<number>`count(*)` })
+    .from(Timing);
+  const totalRecords = totalRecordsResult[0].count;
+
+
+  const result = await db.select({
+    Source: Timing.source_location_id,
+    Destination: Timing.destination_location_id
+  })
+    .from(Timing)
+    .limit(pageSize)
+    .offset(offset);
+
+  return {
+    data: result,
+    meta: {
+      totalRecords,
+      currentPage,
+      pageSize,
+      totalPages: Math.ceil(totalRecords / pageSize),
+    },
+  };
+}
+
 }

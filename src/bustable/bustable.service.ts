@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from 'src/db/db.connection';
 import { Bus, Route, Timing } from 'src/db/schema';
 type bustype = "ORDINARY" | "EXPRESS" | "DELUXE" | "SUPER_LUXURY" | "GARUDA" | "METRO_EXPRESS";
@@ -55,10 +55,23 @@ export class BustableService {
       }
 
  }
-  async AllBusNumber(){
-     const  result = await db.select({BusNumber:Bus.bus_number}).from(Bus);
+  async AllBusNumber(page: number, limit: number){
+     const currentPage = Math.max(1, page);
+     const pageSize = Math.max(1, limit);
+     const offset = (currentPage - 1) * pageSize;
+      const totalRecordsResult = await db.select({ count: sql<number>`count(*)` })
+         .from(Timing);
+       const totalRecords = totalRecordsResult[0].count;
+     
+     const  result = await db.select({BusNumber:Bus.bus_number}).from(Bus).limit(pageSize).offset(offset);;
       return{
-        result
-      }
+        data: result,
+    meta: {
+      totalRecords,
+      currentPage,
+      pageSize,
+      totalPages: Math.ceil(totalRecords / pageSize),
+    },
+  };
   }
 }

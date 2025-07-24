@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { BustableService } from './bustable.service';
 type bustype = "ORDINARY" | "EXPRESS" | "DELUXE" | "SUPER_LUXURY" | "GARUDA" | "METRO_EXPRESS";
 
@@ -6,8 +6,8 @@ type bustype = "ORDINARY" | "EXPRESS" | "DELUXE" | "SUPER_LUXURY" | "GARUDA" | "
 export class BustableController {
     constructor(private readonly service:BustableService){}
      @Get("AllBusNumber")
-    async AllBusNumber(){
-       const result = await this.service.AllBusNumber();
+    async AllBusNumber(@Query('page') page: number = 1,@Query('limit') limit: number = 10,){
+       const result = await this.service.AllBusNumber(+page, +limit);
         return{
           result
         }

@@ -10,9 +10,10 @@ import { BustableModule } from './bustable/bustable.module';
 import { LocationtableModule } from './locationtable/locationtable.module';
 import { TimingModule } from './timing/timing.module';
 import { RouteModule } from './route/route.module';
+import { ManagerModule } from './manager/manager.module';
 
 @Module({
-  imports: [ProfileModule, LoginModule, DepottableModule,AuthModule, BustableModule, LocationtableModule, TimingModule, RouteModule],
+  imports: [ProfileModule, LoginModule, DepottableModule,AuthModule, BustableModule, LocationtableModule, TimingModule, RouteModule, ManagerModule],
   controllers: [AppController ],
   providers: [AppService],
 })

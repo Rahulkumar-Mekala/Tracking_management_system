@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { TimingService } from './timing.service';
 
 @Controller('timing')
@@ -26,9 +26,11 @@ async sourceAndDestination(@Body() body: { source_location_id: string; destinati
      const result = await this.service.AllDetails();
       return result;
   }
- @Get("AllSorceandDestination")
-   async AllTiming(){
-     const result = await this.service.Timming();
-       return result
-   }
+ 
+  @Get('AllSorceandDestination')
+  async AllTiming(@Query('page') page: number = 1,@Query('limit') limit: number = 10,
+  ) {
+    const result = await this.service.getTimingWithPagination(+page, +limit);
+    return result;
+  }
 }

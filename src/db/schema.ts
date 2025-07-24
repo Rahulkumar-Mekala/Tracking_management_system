@@ -49,7 +49,6 @@ export const Route = pgTable("routetable", {
   destination_location_id: varchar("destination_location_id",{ length: 100 }).references(() => Location.location_name),
   stops: jsonb("stops"),
   status: routeStatusEnum("status").notNull().default("on-time"),
-
   distance_km: real("distance_km"),
   estimated_time_minutes: real("estimated_time_minutes"),
   Create_At: timestamp("Create_At").notNull().defaultNow(),
