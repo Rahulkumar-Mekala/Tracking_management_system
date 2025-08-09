@@ -1,0 +1,1 @@
+ALTER TABLE "bus_live_tracking" ALTER COLUMN "recorded_at" DROP NOT NULL;

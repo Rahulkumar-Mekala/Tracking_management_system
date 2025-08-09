@@ -1,1 +1,0 @@
-ALTER TABLE "timmingtable" ADD PRIMARY KEY ("timing_id");

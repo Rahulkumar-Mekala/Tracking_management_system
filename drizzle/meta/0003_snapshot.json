@@ -1,41 +1,53 @@
 {
-  "id": "d73fbd7c-869b-4eb7-9251-a89577dec40f",
-  "prevId": "fbf55847-ed94-49f6-89a5-9693e241010c",
+  "id": "4bcb91a2-1fc9-4fa0-a9da-5538303a088b",
+  "prevId": "4b36f347-0c83-4d24-bf8f-83488657b5f9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.bustable": {
-      "name": "bustable",
+    "public.Attendance": {
+      "name": "Attendance",
       "schema": "",
       "columns": {
-        "bus_id": {
-          "name": "bus_id",
+        "id": {
+          "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bus_number": {
-          "name": "bus_number",
-          "type": "varchar(50)",
           "primaryKey": true,
           "notNull": true
         },
-        "bus_type": {
-          "name": "bus_type",
-          "type": "bus_type_enum",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "capacity": {
-          "name": "capacity",
-          "type": "integer",
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "login_time": {
+          "name": "login_time",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
-        "depo_id": {
-          "name": "depo_id",
-          "type": "varchar(20)",
+        "logout_time": {
+          "name": "logout_time",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -56,15 +68,125 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bustable_depo_id_DEPOTtable_depo_code_number_fk": {
-          "name": "bustable_depo_id_DEPOTtable_depo_code_number_fk",
-          "tableFrom": "bustable",
-          "tableTo": "DEPOTtable",
+        "Attendance_user_id_User_id_fk": {
+          "name": "Attendance_user_id_User_id_fk",
+          "tableFrom": "Attendance",
+          "tableTo": "User",
           "columnsFrom": [
-            "depo_id"
+            "user_id"
           ],
           "columnsTo": [
-            "depo_code_number"
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ConductorAssignment": {
+      "name": "ConductorAssignment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "driver_code": {
+          "name": "driver_code",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bus_number": {
+          "name": "bus_number",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "route_name": {
+          "name": "route_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assigned_date": {
+          "name": "assigned_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "shift_time": {
+          "name": "shift_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ConductorAssignment_phone_User_phone_fk": {
+          "name": "ConductorAssignment_phone_User_phone_fk",
+          "tableFrom": "ConductorAssignment",
+          "tableTo": "User",
+          "columnsFrom": [
+            "phone"
+          ],
+          "columnsTo": [
+            "phone"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ConductorAssignment_bus_number_bustable_bus_number_fk": {
+          "name": "ConductorAssignment_bus_number_bustable_bus_number_fk",
+          "tableFrom": "ConductorAssignment",
+          "tableTo": "bustable",
+          "columnsFrom": [
+            "bus_number"
+          ],
+          "columnsTo": [
+            "bus_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ConductorAssignment_route_name_routetable_route_name_fk": {
+          "name": "ConductorAssignment_route_name_routetable_route_name_fk",
+          "tableFrom": "ConductorAssignment",
+          "tableTo": "routetable",
+          "columnsFrom": [
+            "route_name"
+          ],
+          "columnsTo": [
+            "route_name"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -72,11 +194,452 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "bustable_bus_id_unique": {
-          "name": "bustable_bus_id_unique",
+        "ConductorAssignment_driver_code_unique": {
+          "name": "ConductorAssignment_driver_code_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "driver_code"
+          ]
+        },
+        "ConductorAssignment_bus_number_unique": {
+          "name": "ConductorAssignment_bus_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "bus_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ConductorTripReport": {
+      "name": "ConductorTripReport",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "conductor_id": {
+          "name": "conductor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bus_id": {
+          "name": "bus_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "route_id": {
+          "name": "route_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "trip_date": {
+          "name": "trip_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shift_time": {
+          "name": "shift_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_passengers": {
+          "name": "total_passengers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "male_passengers": {
+          "name": "male_passengers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "female_passengers": {
+          "name": "female_passengers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "passengers_without_ticket": {
+          "name": "passengers_without_ticket",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tickets_issued": {
+          "name": "tickets_issued",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_fare_collected": {
+          "name": "total_fare_collected",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remarks": {
+          "name": "remarks",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ConductorTripReport_conductor_id_User_id_fk": {
+          "name": "ConductorTripReport_conductor_id_User_id_fk",
+          "tableFrom": "ConductorTripReport",
+          "tableTo": "User",
+          "columnsFrom": [
+            "conductor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ConductorTripReport_bus_id_bustable_bus_id_fk": {
+          "name": "ConductorTripReport_bus_id_bustable_bus_id_fk",
+          "tableFrom": "ConductorTripReport",
+          "tableTo": "bustable",
+          "columnsFrom": [
             "bus_id"
+          ],
+          "columnsTo": [
+            "bus_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ConductorTripReport_route_id_routetable_route_id_fk": {
+          "name": "ConductorTripReport_route_id_routetable_route_id_fk",
+          "tableFrom": "ConductorTripReport",
+          "tableTo": "routetable",
+          "columnsFrom": [
+            "route_id"
+          ],
+          "columnsTo": [
+            "route_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.DEPOTtable": {
+      "name": "DEPOTtable",
+      "schema": "",
+      "columns": {
+        "depot_id": {
+          "name": "depot_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "depo_code_number": {
+          "name": "depo_code_number",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depo_name": {
+          "name": "depo_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact_number": {
+          "name": "contact_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "DEPOTtable_depo_code_number_unique": {
+          "name": "DEPOTtable_depo_code_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "depo_code_number"
+          ]
+        },
+        "DEPOTtable_contact_number_unique": {
+          "name": "DEPOTtable_contact_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contact_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.DriverAssignment": {
+      "name": "DriverAssignment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "driver_code": {
+          "name": "driver_code",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bus_number": {
+          "name": "bus_number",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "route_name": {
+          "name": "route_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assigned_date": {
+          "name": "assigned_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "shift_time": {
+          "name": "shift_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "DriverAssignment_phone_User_phone_fk": {
+          "name": "DriverAssignment_phone_User_phone_fk",
+          "tableFrom": "DriverAssignment",
+          "tableTo": "User",
+          "columnsFrom": [
+            "phone"
+          ],
+          "columnsTo": [
+            "phone"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "DriverAssignment_bus_number_bustable_bus_number_fk": {
+          "name": "DriverAssignment_bus_number_bustable_bus_number_fk",
+          "tableFrom": "DriverAssignment",
+          "tableTo": "bustable",
+          "columnsFrom": [
+            "bus_number"
+          ],
+          "columnsTo": [
+            "bus_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "DriverAssignment_route_name_routetable_route_name_fk": {
+          "name": "DriverAssignment_route_name_routetable_route_name_fk",
+          "tableFrom": "DriverAssignment",
+          "tableTo": "routetable",
+          "columnsFrom": [
+            "route_name"
+          ],
+          "columnsTo": [
+            "route_name"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "DriverAssignment_driver_code_unique": {
+          "name": "DriverAssignment_driver_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "driver_code"
+          ]
+        },
+        "DriverAssignment_bus_number_unique": {
+          "name": "DriverAssignment_bus_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "bus_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.User": {
+      "name": "User",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fullname": {
+          "name": "fullname",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profile_url": {
+          "name": "profile_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DateofBirth": {
+          "name": "DateofBirth",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Gender": {
+          "name": "Gender",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'PASSENGER'"
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "User_phone_unique": {
+          "name": "User_phone_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone"
+          ]
+        },
+        "User_email_unique": {
+          "name": "User_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
           ]
         }
       },
@@ -91,14 +654,14 @@
         "tracking_id": {
           "name": "tracking_id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
-        "bus_id": {
-          "name": "bus_id",
+        "bus_number": {
+          "name": "bus_number",
           "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "latitude": {
           "name": "latitude",
@@ -122,18 +685,31 @@
           "name": "recorded_at",
           "type": "timestamp",
           "primaryKey": false,
+          "notNull": false
+        },
+        "Create_At": {
+          "name": "Create_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "Update_At": {
+          "name": "Update_At",
+          "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "bus_live_tracking_bus_id_bustable_bus_number_fk": {
-          "name": "bus_live_tracking_bus_id_bustable_bus_number_fk",
+        "bus_live_tracking_bus_number_bustable_bus_number_fk": {
+          "name": "bus_live_tracking_bus_number_bustable_bus_number_fk",
           "tableFrom": "bus_live_tracking",
           "tableTo": "bustable",
           "columnsFrom": [
-            "bus_id"
+            "bus_number"
           ],
           "columnsTo": [
             "bus_number"
@@ -144,11 +720,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "bus_live_tracking_tracking_id_unique": {
-          "name": "bus_live_tracking_tracking_id_unique",
+        "bus_live_tracking_bus_number_unique": {
+          "name": "bus_live_tracking_bus_number_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "tracking_id"
+            "bus_number"
           ]
         }
       },
@@ -156,37 +732,53 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.DEPOTtable": {
-      "name": "DEPOTtable",
+    "public.bustable": {
+      "name": "bustable",
       "schema": "",
       "columns": {
-        "depot_id": {
-          "name": "depot_id",
+        "bus_id": {
+          "name": "bus_id",
           "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "bus_number": {
+          "name": "bus_number",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
+        },
+        "bus_type": {
+          "name": "bus_type",
+          "type": "bus_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transport_mode": {
+          "name": "transport_mode",
+          "type": "transport_mode_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "capacity": {
+          "name": "capacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "bus_status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'ACTIVE'"
         },
         "depo_code_number": {
           "name": "depo_code_number",
           "type": "varchar(20)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "depo_name": {
-          "name": "depo_name",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "location": {
-          "name": "location",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "contact_number": {
-          "name": "contact_number",
-          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": false
         },
@@ -206,21 +798,28 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "bustable_depo_code_number_DEPOTtable_depo_code_number_fk": {
+          "name": "bustable_depo_code_number_DEPOTtable_depo_code_number_fk",
+          "tableFrom": "bustable",
+          "tableTo": "DEPOTtable",
+          "columnsFrom": [
+            "depo_code_number"
+          ],
+          "columnsTo": [
+            "depo_code_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "DEPOTtable_depot_id_unique": {
-          "name": "DEPOTtable_depot_id_unique",
+        "bustable_bus_number_unique": {
+          "name": "bustable_bus_number_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "depot_id"
-          ]
-        },
-        "DEPOTtable_contact_number_unique": {
-          "name": "DEPOTtable_contact_number_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "contact_number"
+            "bus_number"
           ]
         }
       },
@@ -235,26 +834,26 @@
         "location_id": {
           "name": "location_id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "location_name": {
           "name": "location_name",
           "type": "varchar(100)",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "city": {
           "name": "city",
-          "type": "varchar(500)",
+          "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "state": {
           "name": "state",
-          "type": "varchar(100)",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "pincode": {
           "name": "pincode",
@@ -281,11 +880,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "locationtable_location_id_unique": {
-          "name": "locationtable_location_id_unique",
+        "locationtable_location_name_unique": {
+          "name": "locationtable_location_name_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "location_id"
+            "location_name"
           ]
         }
       },
@@ -300,24 +899,30 @@
         "route_id": {
           "name": "route_id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "route_name": {
           "name": "route_name",
-          "type": "varchar(100)",
-          "primaryKey": true,
+          "type": "varchar",
+          "primaryKey": false,
           "notNull": true
         },
         "source_location_id": {
           "name": "source_location_id",
-          "type": "varchar(100)",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "destination_location_id": {
           "name": "destination_location_id",
-          "type": "varchar(100)",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stops": {
+          "name": "stops",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -326,6 +931,14 @@
           "type": "real",
           "primaryKey": false,
           "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "route_status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'ACTIVE'"
         },
         "estimated_time_minutes": {
           "name": "estimated_time_minutes",
@@ -379,11 +992,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "routetable_route_id_unique": {
-          "name": "routetable_route_id_unique",
+        "routetable_route_name_unique": {
+          "name": "routetable_route_name_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "route_id"
+            "route_name"
           ]
         }
       },
@@ -405,37 +1018,38 @@
           "name": "bus_id",
           "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "source_location_id": {
           "name": "source_location_id",
-          "type": "varchar(100)",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "destination_location_id": {
           "name": "destination_location_id",
-          "type": "varchar(100)",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "departure_time": {
           "name": "departure_time",
           "type": "time",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "arrival_time": {
           "name": "arrival_time",
           "type": "time",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "trip_date": {
           "name": "trip_date",
           "type": "date",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         },
         "Create_At": {
           "name": "Create_At",
@@ -495,113 +1109,22 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "timmingtable_timing_id_unique": {
-          "name": "timmingtable_timing_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "timing_id"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.User": {
-      "name": "User",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "fullname": {
-          "name": "fullname",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "profile_url": {
-          "name": "profile_url",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(15)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Email-Address": {
-          "name": "Email-Address",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Date-of-Birth": {
-          "name": "Date-of-Birth",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Gender": {
-          "name": "Gender",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "user_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'PASSENGER'"
-        },
-        "Account_create": {
-          "name": "Account_create",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "Account_update": {
-          "name": "Account_update",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "User_phone_unique": {
-          "name": "User_phone_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
-        },
-        "User_Email-Address_unique": {
-          "name": "User_Email-Address_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "Email-Address"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
   "enums": {
+    "public.bus_status_enum": {
+      "name": "bus_status_enum",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "INACTIVE",
+        "UNDER_MAINTENANCE"
+      ]
+    },
     "public.bus_type_enum": {
       "name": "bus_type_enum",
       "schema": "public",
@@ -614,6 +1137,26 @@
         "METRO_EXPRESS"
       ]
     },
+    "public.route_status_enum": {
+      "name": "route_status_enum",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "INACTIVE",
+        "CANCELLED"
+      ]
+    },
+    "public.transport_mode_enum": {
+      "name": "transport_mode_enum",
+      "schema": "public",
+      "values": [
+        "CITY_BUS",
+        "INTERCITY_BUS",
+        "METRO",
+        "LOCAL_TRAIN",
+        "EXPRESS_BUS"
+      ]
+    },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
@@ -621,6 +1164,7 @@
         "ADMIN",
         "MANAGER",
         "DRIVER",
+        "CONDUCTOR",
         "PASSENGER"
       ]
     }

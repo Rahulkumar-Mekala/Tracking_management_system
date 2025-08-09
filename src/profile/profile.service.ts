@@ -12,7 +12,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LoginService } from 'src/login/login.service';
 
-
 config(); // load .env
 
 interface OtpStorage {
@@ -61,6 +60,10 @@ export class ProfileService {
     DateofBirth: string,
     Gender: string,
   ) {
+    if (!profile_url) {
+      throw new BadRequestException('Profile image is required');
+    }
+
     // Save profile image
     const filename = `${Date.now()}-${profile_url.originalname}`;
     const filepath = path.join(this.uploadPath, filename);
@@ -71,6 +74,7 @@ export class ProfileService {
       .select()
       .from(User)
       .where(eq(User.email, email));
+
     if (existing.length > 0) {
       throw new BadRequestException('Email already exists');
     }
@@ -96,13 +100,6 @@ export class ProfileService {
         Gender,
       },
     };
-
-    // Validate email using Abstract API
-    // const isvalid = await verifyEmailWithAPI(email);
-    // if (!isvalid) {
-    //   delete this.otpStore[email];
-    //   throw new BadRequestException('Invalid email address. OTP not sent.');
-    // }
 
     // Send OTP email
     try {
@@ -146,9 +143,20 @@ export class ProfileService {
       throw new BadRequestException('Invalid OTP');
     }
 
-    const { fullname, DateofBirth, Gender } = record.userData;
+    const { fullname, DateofBirth, Gender,profile_url } = record.userData;
 
-    await db.update(User).set({fullname,email,DateofBirth,Gender,Update_At: new Date(),}).where(eq(User.phone, phone));
+    await db
+      .update(User)
+      .set({
+        fullname,
+        email,
+        DateofBirth,
+        Gender,
+        profile_url,
+        Update_At: new Date(),
+      })
+      .where(eq(User.phone, phone))
+      .returning();
 
     delete this.otpStore[email];
     return {

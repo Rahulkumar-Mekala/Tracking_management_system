@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { LocationtableService } from './locationtable.service';
 
 @Controller('locationtable')
@@ -11,4 +11,12 @@ export class LocationtableController {
             result
          }
     }
+     @Get("locationtable")
+     async alllocation(){
+         const result = await this.service.Alllocation();
+          return{
+            result
+          }
+
+     }
 }

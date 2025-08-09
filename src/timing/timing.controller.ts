@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { TimingService } from './timing.service';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('timing')
 export class TimingController {
@@ -13,6 +14,16 @@ export class TimingController {
 
       }
   @Post("sourcedestination")
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        source_location_id: { type: 'string', example: 'Mehdipatnam' },
+        destination_location_id: { type: 'string', example: 'Uppal' }
+      },
+      required: ['source_location_id', 'destination_location_id'],
+    },
+  })
 async sourceAndDestination(@Body() body: { source_location_id: string; destination_location_id: string }) {
   const result = await this.service.sourceanddestination(body.source_location_id,body.destination_location_id);
 

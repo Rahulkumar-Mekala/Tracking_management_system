@@ -20,12 +20,14 @@ export class DepottableController {
               }
 
         }
-        @Post("create")
-          async createDepo(@Body() body:{DepoCodeNumber:string,depo_name:string,location:string,contact_number}){
-             const result = await this.service.createdepottable(body.DepoCodeNumber,body.depo_name,body.location,body.contact_number); 
-             return{
-                result
-             }
+       @Post('create')
+async createDepo(@Body() body: any) {
+  return this.service.createdepottable(
+    body.depo_code_number,
+    body.depo_name,
+    body.location,
+    body.contact_number
+  );
 
           }
           @Post("update/:id")
